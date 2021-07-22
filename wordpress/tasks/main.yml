@@ -1,0 +1,37 @@
+- name: Installing epel-release and yum-utils to download updated version of PHP
+  yum: pkg={{ item }} state=present
+  with_items:
+   - yum-utils
+  tags: php
+- name: install epel
+  command: yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm --skip-broken
+- name: install remi
+  command: yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm -y --skip-broken
+- name: enabling the PHP 7.3 Remi repository
+  command: yum-config-manager --enable remi-php73 -y
+  tags: php
+- name: installing php
+  yum: 
+     name=php
+     state=present
+- name: Installing PHP and other pkgs
+  yum: pkg={{ item }}  state=present skip_broken=yes
+  with_items:
+   - php-common
+   - php-mysqlnd
+   - php-gd
+   - php-xml
+   - php-mbstring
+   - php-xmlrpc
+   - unzip
+   - wget
+  tags: php
+- name: Installing and Configuring MariaDB and MariaDB-CLient For WordBress
+  include_tasks: database.yml
+  tags: database
+- name : Installing and configuring httpd server for WordBress
+  include_tasks: webserver.yml
+  tags: webserver
+- name: Downloading and configuring WORDPRESS 
+  include_tasks: wordpress.yml
+  tags: wordpress

@@ -1,0 +1,6 @@
+- name: Install apache web server
+  yum: pkg=httpd state=present
+  tags: webserver
+- name: Start and enable httpd
+  service: name=httpd state=restarted enabled=yes
+  tags: webserver 
